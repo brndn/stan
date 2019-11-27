@@ -1,26 +1,49 @@
-export const data = require('./../feed/sample.json');
-export const filterTypes = {
+import {get, resolveCacheOrGet, DATA_TYPES} from '../utils/http-async-await';
+
+export const FILTER_TYPES = {
     SERIES: "series",
     MOVIES: "movie",
 };
 
-/**
- *@description fetch was used but hit local host issues loading the resource, in a effort to not spend too much time it seemed easier to require the resource directly.
- * @param type
- * @return {Promise<T>}
- */
+export const TITLES_URL = 'http://localhost:5000/feed/sample.json';
+
 export async function getDataByProgramType(type) {
+    let response : any = await resolveCacheOrGet(TITLES_URL, DATA_TYPES.JSON);
 
     const ret = new Set();
-    for (const item of data.entries) {
+
+    for (const item of response.entries) {
         if ((item.programType as string) == type && (item.releaseYear as number) >= 2010) {
             ret.add(item);
         }
     }
-    /**
-     * @description simulate loading from a cdn.
-     */
-    return new Promise(function(resolve) {
-     resolve(ret);
-    });
+    return Promise.resolve(ret);
+}
+
+
+async function loadImage(str:string){
+    let response : any = await fetch(str);
+    let responseBlob : any = await response.blob();
+    return str;
+}
+
+
+export async function downloadImageData() {
+    let response : any = await resolveCacheOrGet(TITLES_URL, DATA_TYPES.JSON);
+    console.log(response);
+
+    const ret = new Set();
+    const prommiseArray : any = [];
+    for (const item of response.entries) {
+        if ((item.releaseYear as number) >= 2010) {
+            ret.add(item);
+            prommiseArray.push(
+                loadImage(item.images["Poster Art"].url).then(data => {
+                    item.srcPath = item.images["Poster Art"].url;
+                })
+            );
+        }
+    }
+    await Promise.all(prommiseArray);
+    return Promise.resolve(ret);
 }

@@ -1,44 +1,36 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
-
 ## Available Scripts
 
 In the project directory, you can run:
 
-### `yarn start`
+#### `yarn start` or `npm start`
 
-Runs the app in the development mode.<br />
+Runs the app in the development mode.
+
+
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
 
-### `yarn test`
+#### How did you decide on the technical and architectural choices used as part of your solution?
+I added a http server to the start script as there were issues loading the json when running the application locally, it was simpler to serve up the resource via another http local server.
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+I decided to implement a preloading strategy for the poster images, as they were on average 1mb each. As this created a bad user experience if resources were not already in the browser cache.
 
-### `yarn build`
+I also wrote a base-catalogue-view component for reusabilty and inheritance.
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+I added a volatile cache for data, this was also extended to be used for image data blobs, but this would depend on what the device target was, examples being if the target was an embedded STB with mounted storage, blobs could be written into nand.
+ 
+I took a more modularised approach, as this encourages seperation of concerns and also is better suited for unitary testing.
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+#### Are there any improvements you could make to your submission?
+I would write a guard methodology for asynconous requests that are bound to view state changes.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+#### What would you do differently if you were allocated more time?
+If I had more time or if this was for a live deployment I would focus the implementation around what the delployment target is.
 
-### `yarn eject`
+If I had more time I would write out unit tests. 
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+Implement login flows, registration flows, title context menus and playback etc.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+#### `yarn build` or `npm build`
 
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+Builds the app for production to the `build` folder.
